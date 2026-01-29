@@ -5,7 +5,7 @@ Official MCP (Model Context Protocol) server for [BolagsAPI](https://bolagsapi.s
 Enables Claude, ChatGPT, and other AI agents to access comprehensive Swedish company information including:
 - Company lookup and search
 - Financial analysis from annual reports
-- Credit scoring and risk assessment
+- Financial health and stability analysis
 - Compliance screening (sanctions, PEP)
 - Industry statistics and benchmarks
 
@@ -98,7 +98,7 @@ Add to your Continue configuration:
 | `get_company_timeline` | Historical events and milestones |
 | `get_similar_companies` | Find peer companies by industry |
 
-### Financial & Credit
+### Financial & Health
 
 | Tool | Description |
 |------|-------------|
