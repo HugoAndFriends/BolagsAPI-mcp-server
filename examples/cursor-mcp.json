@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "bolagsapi": {
+      "command": "npx",
+      "args": ["-y", "@bolagsapi/mcp-server"],
+      "env": {
+        "BOLAGSAPI_KEY": "sk_live_your_api_key_here"
+      }
+    }
+  }
+}

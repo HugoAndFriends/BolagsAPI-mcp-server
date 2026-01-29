@@ -1,0 +1,70 @@
+{
+  "name": "@bolagsapi/mcp-server",
+  "version": "0.1.0",
+  "description": "MCP server for BolagsAPI - Swedish company data for AI agents",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "bolagsapi-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "start:http": "node dist/http-server.js",
+    "dev": "bun run --watch src/index.ts",
+    "dev:http": "bun run --watch src/http-server.ts",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.1",
+    "express": "^4.21.0",
+    "express-rate-limit": "^7.5.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.2",
+    "eslint": "^9.17.0",
+    "eslint-plugin-sonarjs": "^3.0.1",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.0"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "bolagsapi",
+    "swedish-companies",
+    "ai-agents",
+    "claude",
+    "anthropic",
+    "openai",
+    "company-data",
+    "financial-data",
+    "credit-score"
+  ],
+  "author": "BolagsAPI <dev@bolagsapi.se>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HugoAndFriends/BolagsAPI-mcp-server.git"
+  },
+  "homepage": "https://bolagsapi.se/docs",
+  "bugs": {
+    "url": "https://github.com/HugoAndFriends/BolagsAPI-mcp-server/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
