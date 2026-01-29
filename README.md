@@ -103,7 +103,7 @@ Add to your Continue configuration:
 | Tool | Description |
 |------|-------------|
 | `analyze_company_financials` | Financial data + AI analysis from annual reports |
-| `assess_company_credit` | Credit score, health score, risk indicators |
+| `assess_financial_health` | Health score, stability grade, financial flags |
 | `get_annual_reports` | List available annual reports |
 
 ### Compliance & Reference
@@ -160,7 +160,7 @@ Once configured, you can ask Claude:
 
 > "Check if company 5566778899 has any sanctions hits"
 
-> "What's the credit rating for org 556677-8899?"
+> "What's the financial health of org 556677-8899?"
 
 ## Development
 

@@ -2,24 +2,28 @@
  * Type definitions for BolagsAPI responses
  */
 
-export interface CreditRating {
-  rating: string;
-  risk_score: number;
-  credit_limit?: number;
+export interface FinancialHealth {
+  stability_grade: string;
+  volatility_index: number;
   finance_score: number;
   history_score: number;
   ability_to_pay_score: number;
   ownership_score: number;
-  composite_score?: number;
-  risk_indicators: {
-    payment_remarks_count: number;
-    payment_remarks_amount: number;
+  composite_score: number;
+  financial_flags: {
+    public_defaults_count: number;
+    public_defaults_amount: number;
     petitions_count: number;
     petitions_amount: number;
     has_negative_equity: boolean;
     has_liquidation: boolean;
     has_fi_warning: boolean;
     has_qualified_audit: boolean;
+  };
+  _disclaimer?: {
+    sv: string;
+    en: string;
+    applies: string;
   };
 }
 
@@ -67,8 +71,9 @@ export interface CompanyData {
     average_age?: number;
     female_percentage: number;
   };
-  credit_rating?: CreditRating;
+  financial_health?: FinancialHealth;
   website?: string;
+  linkedin?: string;
   meta: {
     source: string;
     updated_at: string;

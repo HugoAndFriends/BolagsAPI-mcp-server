@@ -4,20 +4,20 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import {
   AnalyzeFinancialsInputSchema,
-  AssessCreditInputSchema,
+  AssessFinancialHealthInputSchema,
   GetReportsInputSchema,
 } from "../schemas.js";
 import {
   getFinancials,
   getAnalysis,
   getHealthScore,
+  getFinancialHealth,
   getReports,
-  getCompany,
   ApiError,
   type FinancialsData,
   type AnalysisData,
   type HealthScore,
-  type CreditRating,
+  type FinancialHealth,
   type ReportsList,
 } from "../api-client.js";
 
@@ -109,46 +109,43 @@ function formatBenchmark(bm: HealthScore["industry_benchmark"]): string[] {
   ];
 }
 
-/** Format credit rating risk indicators */
-function formatRiskIndicators(ri: CreditRating["risk_indicators"]): string[] {
-  const lines: string[] = ["### Risk Indicators"];
-  if (ri.payment_remarks_count > 0) {
-    lines.push(`- Payment remarks: ${String(ri.payment_remarks_count)} (${formatCurrency(ri.payment_remarks_amount)})`);
+/** Format financial flags */
+function formatFinancialFlags(flags: FinancialHealth["financial_flags"]): string[] {
+  const lines: string[] = ["### Financial Flags"];
+  if (flags.public_defaults_count > 0) {
+    lines.push(`- Public defaults: ${String(flags.public_defaults_count)} (${formatCurrency(flags.public_defaults_amount)})`);
   }
-  if (ri.petitions_count > 0) {
-    lines.push(`- Petitions: ${String(ri.petitions_count)} (${formatCurrency(ri.petitions_amount)})`);
+  if (flags.petitions_count > 0) {
+    lines.push(`- Petitions: ${String(flags.petitions_count)} (${formatCurrency(flags.petitions_amount)})`);
   }
-  if (ri.has_negative_equity) lines.push("- Has negative equity");
-  if (ri.has_liquidation) lines.push("- Ongoing liquidation");
-  if (ri.has_fi_warning) lines.push("- Finansinspektionen warning");
-  if (ri.has_qualified_audit) lines.push("- Qualified audit opinion");
-  const noRisk = ri.payment_remarks_count === 0 && ri.petitions_count === 0 && !ri.has_negative_equity;
-  if (noRisk && !ri.has_liquidation && !ri.has_fi_warning && !ri.has_qualified_audit) {
-    lines.push("- No significant risk indicators found");
+  if (flags.has_negative_equity) lines.push("- Has negative equity");
+  if (flags.has_liquidation) lines.push("- Ongoing liquidation");
+  if (flags.has_fi_warning) lines.push("- Finansinspektionen warning");
+  if (flags.has_qualified_audit) lines.push("- Qualified audit opinion");
+  const noFlags = flags.public_defaults_count === 0 && flags.petitions_count === 0 && !flags.has_negative_equity;
+  if (noFlags && !flags.has_liquidation && !flags.has_fi_warning && !flags.has_qualified_audit) {
+    lines.push("- No significant flags found");
   }
   return lines;
 }
 
-/** Format health/credit score for AI-friendly output */
-function formatCreditResponse(hs: HealthScore, cr?: CreditRating): string {
+/** Format health + financial health for AI-friendly output */
+function formatAssessmentResponse(hs: HealthScore, fh?: FinancialHealth): string {
   const lines = [
-    `# Credit Assessment for ${hs.orgnr}`, "", "## Health Score",
+    `# Financial Assessment for ${hs.orgnr}`, "", "## Health Score",
     `**Overall Score:** ${String(hs.score)}/100`, "",
     ...formatHealthFactors(hs.factors),
     ...formatBenchmark(hs.industry_benchmark),
   ];
-  if (cr) {
-    lines.push("", "## Credit Rating", `**Rating:** ${cr.rating}`);
-    lines.push(`**Risk Score:** ${String(cr.risk_score)}/100`);
-    if (cr.credit_limit != null) {
-      lines.push(`**Recommended Credit Limit:** ${cr.credit_limit.toLocaleString()} SEK`);
-    }
+  if (fh) {
+    lines.push("", "## Financial Health", `**Stability Grade:** ${fh.stability_grade}`);
+    lines.push(`**Volatility Index:** ${String(fh.volatility_index)}/100`);
     lines.push("", "### Component Scores");
-    lines.push(`- Finance Score: ${String(cr.finance_score)}`);
-    lines.push(`- History Score: ${String(cr.history_score)}`);
-    lines.push(`- Ability to Pay: ${String(cr.ability_to_pay_score)}`);
-    lines.push(`- Ownership: ${String(cr.ownership_score)}`);
-    lines.push("", ...formatRiskIndicators(cr.risk_indicators));
+    lines.push(`- Finance Score: ${String(fh.finance_score)}`);
+    lines.push(`- History Score: ${String(fh.history_score)}`);
+    lines.push(`- Ability to Pay: ${String(fh.ability_to_pay_score)}`);
+    lines.push(`- Ownership: ${String(fh.ownership_score)}`);
+    lines.push("", ...formatFinancialFlags(fh.financial_flags));
   }
   return lines.join("\n");
 }
@@ -206,13 +203,13 @@ export function registerFinancialTools(server: McpServer): void {
     }
   });
 
-  server.registerTool("assess_company_credit", {
-    description: "Get credit assessment including health score and risk indicators.",
-    inputSchema: AssessCreditInputSchema.shape,
+  server.registerTool("assess_financial_health", {
+    description: "Get financial health assessment including health score, stability grade, and financial flags.",
+    inputSchema: AssessFinancialHealthInputSchema.shape,
   }, async (params) => {
     try {
-      const [hs, company] = await Promise.all([getHealthScore(params.orgnr), getCompany(params.orgnr)]);
-      return { content: [{ type: "text", text: formatCreditResponse(hs, company.credit_rating) }] };
+      const [hs, fh] = await Promise.all([getHealthScore(params.orgnr), getFinancialHealth(params.orgnr).catch(() => undefined)]);
+      return { content: [{ type: "text", text: formatAssessmentResponse(hs, fh) }] };
     } catch (error) {
       return { content: [{ type: "text", text: handleApiError(error) }], isError: true };
     }

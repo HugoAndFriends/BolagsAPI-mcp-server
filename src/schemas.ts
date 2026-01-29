@@ -75,7 +75,7 @@ export const AnalyzeFinancialsInputSchema = z.object({
   lang: LangSchema,
 });
 
-export const AssessCreditInputSchema = z.object({
+export const AssessFinancialHealthInputSchema = z.object({
   orgnr: OrgnrSchema,
 });
 
@@ -115,7 +115,7 @@ export type SearchCompaniesInput = z.infer<typeof SearchCompaniesInputSchema>;
 export type AnalyzeFinancialsInput = z.infer<
   typeof AnalyzeFinancialsInputSchema
 >;
-export type AssessCreditInput = z.infer<typeof AssessCreditInputSchema>;
+export type AssessCreditInput = z.infer<typeof AssessFinancialHealthInputSchema>;
 export type GetTimelineInput = z.infer<typeof GetTimelineInputSchema>;
 export type GetSimilarInput = z.infer<typeof GetSimilarInputSchema>;
 export type GetReportsInput = z.infer<typeof GetReportsInputSchema>;

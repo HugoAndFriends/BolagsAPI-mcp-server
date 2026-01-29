@@ -66,22 +66,17 @@ function formatAddressAndSni(data: CompanyData): string[] {
 }
 
 /**
- * Format credit rating section
+ * Format financial health section
  */
-function formatCreditSection(data: CompanyData): string[] {
-  if (!data.credit_rating) return [];
-  const cr = data.credit_rating;
+function formatFinancialHealthSection(data: CompanyData): string[] {
+  if (!data.financial_health) return [];
+  const fh = data.financial_health;
   const lines = [
-    "", "## Credit Rating",
-    `**Rating:** ${cr.rating}`,
-    `**Risk Score:** ${String(cr.risk_score)}/100`,
+    "", "## Financial Health",
+    `**Stability Grade:** ${fh.stability_grade}`,
+    `**Volatility Index:** ${String(fh.volatility_index)}/100`,
+    `**Composite Score:** ${String(fh.composite_score)}/100`,
   ];
-  if (cr.credit_limit != null) {
-    lines.push(`**Credit Limit:** ${cr.credit_limit.toLocaleString()} SEK`);
-  }
-  if (cr.composite_score != null) {
-    lines.push(`**Composite Score:** ${String(cr.composite_score)}/100`);
-  }
   return lines;
 }
 
@@ -92,7 +87,7 @@ function formatCompanyResponse(data: CompanyData): string {
   const lines = [
     ...formatBasicInfo(data),
     ...formatAddressAndSni(data),
-    ...formatCreditSection(data),
+    ...formatFinancialHealthSection(data),
   ];
   if (data.financials) {
     lines.push("", "## Financial Data");

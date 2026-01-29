@@ -5,7 +5,7 @@
 // Re-export types for convenience
 export type {
   CompanyData,
-  CreditRating,
+  FinancialHealth,
   SearchResult,
   FinancialsData,
   AnalysisData,
@@ -19,6 +19,7 @@ export type {
 
 import type {
   CompanyData,
+  FinancialHealth,
   SearchResult,
   FinancialsData,
   AnalysisData,
@@ -137,6 +138,10 @@ export async function getAnalysis(
 
 export async function getHealthScore(orgnr: string): Promise<HealthScore> {
   return apiRequest<HealthScore>(`/company/${orgnr}/health`);
+}
+
+export async function getFinancialHealth(orgnr: string): Promise<FinancialHealth> {
+  return apiRequest<FinancialHealth>(`/company/${orgnr}/financial-health`);
 }
 
 export async function getTimeline(
