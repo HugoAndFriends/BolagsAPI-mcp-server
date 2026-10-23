@@ -1,7 +1,7 @@
 # BolagsAPI MCP Server Dockerfile
 # Builds the HTTP transport server for remote MCP access
 
-FROM node:22-slim AS builder
+FROM node:22.23.4-slim AS builder
 
 WORKDIR /app
 
@@ -22,7 +22,7 @@ COPY src/ ./src/
 RUN pnpm build
 
 # Production stage
-FROM node:22-slim
+FROM node:22.23.4-slim
 
 WORKDIR /app
 

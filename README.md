@@ -23,7 +23,7 @@ npx @bolagsapi/mcp-server
 
 ## Requirements
 
-- Node.js 18+
+- Node.js 22.23.4+, 24.22.1+ or 26.12.1+
 - BolagsAPI key (get one at [bolagsapi.se/dashboard](https://bolagsapi.se/dashboard))
 
 ## Quick Start
